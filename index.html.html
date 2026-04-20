@@ -1,0 +1,401 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.dash{padding:1rem 0;font-family:var(--font-sans)}
+.hdr{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1.25rem;padding-bottom:.75rem;border-bottom:.5px solid var(--color-border-tertiary)}
+.hdr-left h1{font-size:17px;font-weight:500;color:var(--color-text-primary)}
+.hdr-left p{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.tabs{display:flex;gap:8px;margin-bottom:1.25rem}
+.tab{padding:5px 14px;border-radius:var(--border-radius-md);border:.5px solid var(--color-border-secondary);font-size:12px;cursor:pointer;background:var(--color-background-primary);color:var(--color-text-secondary)}
+.tab.on{background:#185FA5;color:#fff;border-color:#185FA5}
+.sec{display:none}.sec.on{display:block}
+.krow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:1rem}
+.kpi{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem 1rem}
+.kpi .lbl{font-size:11px;color:var(--color-text-secondary);margin-bottom:2px}
+.kpi .dt{font-size:10px;color:var(--color-text-tertiary);margin-bottom:3px}
+.kpi .val{font-size:15px;font-weight:500;color:var(--color-text-primary);word-break:break-all}
+.kpi .sub{font-size:10px;color:var(--color-text-tertiary);margin-top:1px}
+.kpi.warn .val{color:#BA7517}.kpi.good .val{color:#0F6E56}.kpi.danger .val{color:#A32D2D}
+.prog-wrap{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:.875rem 1rem;margin-bottom:1rem}
+.prog-wrap h3{font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:.75rem}
+.bar-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.bar-item .bi-lbl{font-size:11px;color:var(--color-text-secondary);margin-bottom:3px;display:flex;justify-content:space-between}
+.bi-lbl span:last-child{font-weight:500;color:var(--color-text-primary)}
+.bar-bg{height:8px;background:var(--color-border-tertiary);border-radius:4px;overflow:hidden}
+.bar{height:100%;border-radius:4px}
+.avail-box{border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:.875rem 1rem;margin-bottom:1rem}
+.avail-box h3{font-size:13px;font-weight:500;margin-bottom:.75rem}
+.af-lbl{font-size:10px;color:var(--color-text-secondary);margin-bottom:2px;line-height:1.3}
+.af-val{font-size:13px;font-weight:500}
+.af-op{text-align:center;font-size:16px;color:var(--color-text-tertiary);padding-top:18px}
+.avail-note{font-size:10px;color:var(--color-text-tertiary);line-height:1.6;margin-top:.5rem}
+.insight{border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:.875rem 1rem;margin-bottom:1rem;font-size:12px;color:var(--color-text-primary);line-height:1.7}
+.insight h3{font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:.5rem}
+.insight ul{padding-left:1rem}
+.insight li{margin-bottom:.25rem}
+.insight li:last-child{margin-bottom:0}
+.hl-warn{color:#BA7517;font-weight:500}
+.hl-good{color:#0F6E56;font-weight:500}
+.hl-danger{color:#A32D2D;font-weight:500}
+.card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:.875rem 1rem;margin-bottom:1rem}
+.card h3{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:.75rem}
+.half-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem}
+.half-row>.card{margin-bottom:0}
+.lgd{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px;font-size:11px;color:var(--color-text-secondary)}
+.lgd span{display:flex;align-items:center;gap:3px}
+.dot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th{text-align:left;padding:6px 8px;font-size:10px;font-weight:500;color:var(--color-text-secondary);border-bottom:.5px solid var(--color-border-tertiary);white-space:nowrap}
+td{padding:5px 8px;border-bottom:.5px solid var(--color-border-tertiary);color:var(--color-text-primary)}
+tr:hover td{background:var(--color-background-secondary)}
+.badge{display:inline-block;padding:1px 6px;border-radius:99px;font-size:10px;font-weight:500;white-space:nowrap}
+.be{background:#B5D4F4;color:#0C447C}.bc{background:#C0DD97;color:#27500A}.bw{background:#9FE1CB;color:#085041}.ba{background:#F4C0D1;color:#72243E}.bo{background:#D3D1C7;color:#444441}
+.comp-tbl{width:100%;border-collapse:collapse;font-size:11px}
+.comp-tbl th{padding:5px 8px;font-size:10px;font-weight:500;color:var(--color-text-secondary);border-bottom:.5px solid var(--color-border-tertiary);text-align:right;white-space:nowrap}
+.comp-tbl th:first-child{text-align:left}
+.comp-tbl td{padding:4px 8px;border-bottom:.5px solid var(--color-border-tertiary);text-align:right;color:var(--color-text-primary);white-space:nowrap}
+.comp-tbl td:first-child{text-align:left;color:var(--color-text-secondary)}
+.comp-tbl tr.yr26 td:first-child{color:#185FA5;padding-left:14px}
+.comp-tbl tr.spacer td{border:none;height:6px}
+.up{color:#A32D2D}.dn{color:#0F6E56}.est{color:#BA7517;font-style:italic}
+.pump-stack{display:flex;flex-direction:column;gap:12px;margin-bottom:1rem}
+</style>
+
+<div class="dash">
+  <div class="hdr">
+    <div class="hdr-left">
+      <h1>치수과 공공운영비 예산 대시보드</h1>
+      <p>공공운영비(201-02) | 2026년 지출집행현황 | 기준일: 2026-04-20</p>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab on" onclick="sw('s1',this)">기전시설 수해예방 지원</button>
+    <button class="tab" onclick="sw('s2',this)">지방하천 기전시설물 유지관리</button>
+  </div>
+
+  <!-- ===== 기전시설 수해예방 ===== -->
+  <div id="s1" class="sec on">
+    <div class="krow">
+      <div class="kpi"><div class="lbl">연간예산</div><div class="dt">2026-04-20 기준</div><div class="val">214,300,000</div><div class="sub">원</div></div>
+      <div class="kpi warn"><div class="lbl">품의액</div><div class="val">77,457,620</div><div class="sub">집행 예정 포함</div></div>
+      <div class="kpi"><div class="lbl">결의액 (실지출)</div><div class="val">34,029,620</div><div class="sub">지급 완료분</div></div>
+      <div class="kpi good"><div class="lbl">예산 잔액</div><div class="val">136,842,380</div><div class="sub">예산 − 품의</div></div>
+    </div>
+    <div class="prog-wrap">
+      <h3>집행 단계별 비율</h3>
+      <div class="bar-row">
+        <div class="bar-item"><div class="bi-lbl"><span>품의율</span><span>36.1%</span></div><div class="bar-bg"><div class="bar" style="width:36.1%;background:#185FA5"></div></div></div>
+        <div class="bar-item"><div class="bi-lbl"><span>원인행위율</span><span>34.1%</span></div><div class="bar-bg"><div class="bar" style="width:34.1%;background:#378ADD"></div></div></div>
+        <div class="bar-item"><div class="bi-lbl"><span>결의율 (실지출)</span><span>15.9%</span></div><div class="bar-bg"><div class="bar" style="width:15.9%;background:#85B7EB"></div></div></div>
+      </div>
+    </div>
+    <div class="avail-box">
+      <h3>가용잔액 추정</h3>
+      <div style="display:grid;grid-template-columns:3fr 20px 3fr 20px 4fr 20px 3fr;align-items:end;gap:4px">
+        <div><div class="af-lbl">연간예산</div><div class="af-val">214,300,000</div></div>
+        <div class="af-op">−</div>
+        <div><div class="af-lbl">품의액</div><div class="af-val" style="color:#BA7517">77,457,620</div></div>
+        <div class="af-op">−</div>
+        <div><div class="af-lbl">공공요금 잔여납부액 추정</div><div class="af-val" style="color:#BA7517">71,787,846</div></div>
+        <div class="af-op">=</div>
+        <div><div class="af-lbl">가용잔액 추정</div><div class="af-val" style="color:#0F6E56;font-size:16px">65,054,534</div></div>
+      </div>
+      <div class="avail-note">공공요금 잔여납부액 추정: 전기 8개월(25,373,293) + 통신 8개월(46,414,553) = 71,787,846원 | 2025년 월평균 기준</div>
+    </div>
+
+    <div class="insight">
+      <h3>인사이트</h3>
+      <ul>
+        <li>통신요금(수위계 시스템)이 현재까지 <span class="hl-warn">2,109만원</span>으로 전기(1,135만)의 약 <span class="hl-warn">1.9배</span> — 연간 약 6,962만원 예상, 단일 최대 비용 항목</li>
+        <li>전기요금은 월 약 <span class="hl-good">319만원</span>으로 안정적 (2025년 월평균 317만과 거의 동일)</li>
+        <li>연간단가 용역 2건(4,343만원)이 <span class="hl-warn">결의 0원</span> — 가용잔액(6,505만)의 67%가 아직 미지급. 실질 여유 약 <span class="hl-warn">2,162만원</span></li>
+        <li>결의율(15.9%)이 품의율(36.1%)의 절반 수준 — 연간단가 용역 미지급분이 대부분</li>
+        <li>4월 통신요금(499만)이 1월(612만) 대비 감소 추세 — 패턴상 이상없음</li>
+        <li>잔여 8개월 예상 공공요금(7,179만) + 미결의 용역(4,343만) = <span class="hl-danger">1.15억</span> 추가 지출 예정, 가용잔액 내에서 소화 가능</li>
+      </ul>
+    </div>
+
+    <div class="half-row">
+      <div class="card">
+        <h3>지출 비중 — 2026-04-20 기준</h3>
+        <div style="position:relative;height:210px"><canvas id="pie1" role="img" aria-label="수해예방 지출비중">지출유형별 비중</canvas></div>
+      </div>
+      <div class="card">
+        <h3>공공요금 월별 누계액</h3>
+        <div class="lgd">
+          <span><span class="dot" style="background:#185FA5"></span>월 집행</span>
+          <span><span class="dot" style="background:#9FE1CB"></span>누계</span>
+        </div>
+        <div style="position:relative;height:170px"><canvas id="ccum1" role="img" aria-label="수해예방 공공요금 누계">공공요금 월별 누계</canvas></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>지출 내역 (11건)</h3>
+      <div class="tbl-wrap"><table><thead><tr><th>날짜</th><th>적요</th><th>구분</th><th style="text-align:right">품의(원)</th><th style="text-align:right">결의(원)</th></tr></thead><tbody id="tb1"></tbody></table></div>
+    </div>
+  </div>
+
+  <!-- ===== 지방하천 기전시설물 ===== -->
+  <div id="s2" class="sec">
+    <div class="krow">
+      <div class="kpi"><div class="lbl">연간예산</div><div class="dt">2026-04-20 기준</div><div class="val">868,555,000</div><div class="sub">원</div></div>
+      <div class="kpi warn"><div class="lbl">품의액</div><div class="val">333,647,100</div><div class="sub">집행 예정 포함</div></div>
+      <div class="kpi"><div class="lbl">결의액 (실지출)</div><div class="val">241,023,910</div><div class="sub">지급 완료분</div></div>
+      <div class="kpi danger"><div class="lbl">예산 잔액</div><div class="val">534,907,900</div><div class="sub">예산 − 품의</div></div>
+    </div>
+    <div class="prog-wrap">
+      <h3>집행 단계별 비율</h3>
+      <div class="bar-row">
+        <div class="bar-item"><div class="bi-lbl"><span>품의율</span><span>38.4%</span></div><div class="bar-bg"><div class="bar" style="width:38.4%;background:#185FA5"></div></div></div>
+        <div class="bar-item"><div class="bi-lbl"><span>원인행위율</span><span>35.7%</span></div><div class="bar-bg"><div class="bar" style="width:35.7%;background:#378ADD"></div></div></div>
+        <div class="bar-item"><div class="bi-lbl"><span>결의율 (실지출)</span><span>27.7%</span></div><div class="bar-bg"><div class="bar" style="width:27.7%;background:#85B7EB"></div></div></div>
+      </div>
+    </div>
+    <div class="avail-box">
+      <h3>가용잔액 추정</h3>
+      <div style="display:grid;grid-template-columns:3fr 20px 3fr 20px 4fr 20px 3fr;align-items:end;gap:4px">
+        <div><div class="af-lbl">연간예산</div><div class="af-val">868,555,000</div></div>
+        <div class="af-op">−</div>
+        <div><div class="af-lbl">품의액</div><div class="af-val" style="color:#BA7517">333,647,100</div></div>
+        <div class="af-op">−</div>
+        <div><div class="af-lbl">공공요금 잔여납부액 추정</div><div class="af-val" style="color:#A32D2D">370,575,226</div></div>
+        <div class="af-op">=</div>
+        <div><div class="af-lbl">가용잔액 추정</div><div class="af-val" style="color:#A32D2D;font-size:16px">164,332,674</div></div>
+      </div>
+      <div class="avail-note">공공요금 잔여납부액 추정: 전기 7개월(351,914,564) + 통신 8개월(7,475,987) + 수도 9개월(11,184,675) = 370,575,226원 | 2025년 월평균 기준 ⚠ 중간가압장 급증 반영시 실제 훨씬 높을 수 있음</div>
+    </div>
+
+    <div class="insight">
+      <h3>인사이트</h3>
+      <ul>
+        <li><span class="hl-danger">중간가압장</span> 1~3월 전기요금이 2025년 동기 대비 <span class="hl-danger">2.55배</span> 급증 (1,466만→3,731만) — 연간 추정 2억 6,490만으로 전년(1억 408만)의 2.5배 이상</li>
+        <li><span class="hl-warn">송수펌프장</span>도 2025 대비 <span class="hl-warn">1.54배</span>↑ — 연간 추정 5억 1,338만. 가압장 3개 합산 연간 추정 <span class="hl-danger">8억 3,113만</span>으로 전체 예산(8억 6,856만)의 96%</li>
+        <li><span class="hl-good">안산가압장</span>은 반대로 2025 대비 <span class="hl-good">0.67배</span>↓ — 1~3월 기준 2,110만→1,413만으로 유일하게 감소</li>
+        <li>공공요금 잔여납부 추정(3억 7,058만) + 현재 품의(3억 3,365만) = <span class="hl-danger">7억 423만</span>으로 예산(8억 6,856만)의 81% 소진 예정</li>
+        <li>연간단가 용역 4건(6,935만) 중 결의 완료분 <span class="hl-warn">866만원</span>뿐 — 나머지 6,069만 미결의</li>
+        <li>1월 전기요금(7,829만)이 4월(406만)의 19배 — 동절기 펌프 가동률 급증 패턴. 하반기(8~11월) 재급증 예상</li>
+        <li>가용잔액 1억 6,433만은 표면상 여유있어 보이나, 중간가압장 증가 추이 지속 시 <span class="hl-danger">예산 초과 위험</span> — 중간가압장 원인 파악 필요</li>
+      </ul>
+    </div>
+
+    <div class="half-row">
+      <div class="card">
+        <h3>지출 비중 — 2026-04-20 기준</h3>
+        <div style="position:relative;height:210px"><canvas id="pie2" role="img" aria-label="지방하천 지출비중">지출유형별 비중</canvas></div>
+      </div>
+      <div class="card">
+        <h3>공공요금 월별 누계액</h3>
+        <div class="lgd">
+          <span><span class="dot" style="background:#185FA5"></span>월 집행</span>
+          <span><span class="dot" style="background:#9FE1CB"></span>누계</span>
+        </div>
+        <div style="position:relative;height:170px"><canvas id="ccum2" role="img" aria-label="지방하천 공공요금 누계">공공요금 월별 누계</canvas></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>가압장 3개소 전기요금 — 2025년 vs 2026년 비교표</h3>
+      <div style="font-size:10px;color:var(--color-text-tertiary);margin-bottom:6px">※ <span style="color:#BA7517;font-style:italic">노란색 이탤릭</span> = 2025년 추이 기반 추정치 (단위: 백만원)</div>
+      <div class="tbl-wrap"><table class="comp-tbl" id="ctbl"></table></div>
+    </div>
+
+    <div class="pump-stack">
+      <div class="card" style="margin-bottom:0">
+        <h3>송수펌프장 — 2025 vs 2026</h3>
+        <div class="lgd"><span><span class="dot" style="background:#AAAAAA"></span>2025</span><span><span class="dot" style="background:#185FA5"></span>2026 실집행</span><span><span class="dot" style="background:#FAC775"></span>2026 추정</span></div>
+        <div style="position:relative;height:200px"><canvas id="cpump" role="img" aria-label="송수펌프장 비교">송수펌프장</canvas></div>
+      </div>
+      <div class="card" style="margin-bottom:0">
+        <h3>중간가압장 — 2025 vs 2026</h3>
+        <div class="lgd"><span><span class="dot" style="background:#AAAAAA"></span>2025</span><span><span class="dot" style="background:#185FA5"></span>2026 실집행</span><span><span class="dot" style="background:#FAC775"></span>2026 추정</span></div>
+        <div style="position:relative;height:200px"><canvas id="cmid" role="img" aria-label="중간가압장 비교">중간가압장</canvas></div>
+      </div>
+      <div class="card" style="margin-bottom:0">
+        <h3>안산가압장 — 2025 vs 2026</h3>
+        <div class="lgd"><span><span class="dot" style="background:#AAAAAA"></span>2025</span><span><span class="dot" style="background:#185FA5"></span>2026 실집행</span><span><span class="dot" style="background:#FAC775"></span>2026 추정</span></div>
+        <div style="position:relative;height:200px"><canvas id="cans" role="img" aria-label="안산가압장 비교">안산가압장</canvas></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>지출 내역 (51건)</h3>
+      <div class="tbl-wrap"><table><thead><tr><th>날짜</th><th>적요</th><th>구분</th><th style="text-align:right">품의(원)</th><th style="text-align:right">결의(원)</th></tr></thead><tbody id="tb2"></tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+function sw(id,el){document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));document.getElementById(id).classList.add('on');el.classList.add('on');}
+const fmt=v=>Math.round(v).toLocaleString('ko-KR');
+const M=v=>(v/1000000).toFixed(1);
+const gc='rgba(128,128,128,0.12)',tc='#888';
+const ML=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+
+const D25={
+  송수:[21730940,23231660,21601850,20802130,19733470,26291730,27629360,32027310,30450090,31430270,35563340,42582380],
+  중간:[5118610,4960690,4580330,4656740,4622760,4948980,8835430,11782970,13164870,12341760,14566130,14502250],
+  안산:[7354520,7185570,6562620,5810000,6006840,6416100,7811660,7780270,6654500,5355880,5468940,6518420]
+};
+const D26act={송수:[45019690,31869210,25709430],중간:[13645630,12844300,10821080],안산:[5843570,4021270,4264550]};
+const D26est={
+  송수:[32063118,30415951,40524448,42586188,49364917,46933887,48444676,54815135,65633849],
+  중간:[11852119,11765634,12595914,22487526,29989468,33506616,31411675,37073038,36910454],
+  안산:[3890105,4021900,4295921,5230323,5209306,4455543,3586047,3661747,4364430]
+};
+
+/* 비교표 */
+const facKeys=['송수','중간','안산'];
+const facNames={'송수':'송수펌프장','중간':'중간가압장','안산':'안산가압장'};
+let h='<thead><tr><th></th>';
+ML.forEach(m=>h+=`<th>${m}</th>`);
+h+='<th>합계</th></tr></thead><tbody>';
+facKeys.forEach(k=>{
+  const r25=D25[k],r26=[...D26act[k],...D26est[k]];
+  const s25=r25.reduce((a,b)=>a+b,0),s26=r26.reduce((a,b)=>a+b,0);
+  h+=`<tr><td style="font-weight:500;color:var(--color-text-primary)">${facNames[k]} 2025</td>`;
+  r25.forEach(v=>h+=`<td style="color:var(--color-text-secondary)">${M(v)}</td>`);
+  h+=`<td style="color:var(--color-text-secondary);font-weight:500">${M(s25)}</td></tr>`;
+  h+=`<tr class="yr26"><td>└ 2026</td>`;
+  r26.forEach((v,i)=>{
+    const isEst=i>=3,diff=v-r25[i],cls=diff>0?'up':'dn',arrow=diff>0?'▲':'▼';
+    h+=`<td>${isEst?`<span class="est">${M(v)}</span>`:M(v)}<br><span class="${cls}" style="font-size:9px">${arrow}${M(Math.abs(diff))}</span></td>`;
+  });
+  const ds=s26-s25;
+  h+=`<td><span style="color:${ds>0?'#A32D2D':'#0F6E56'};font-weight:500">${M(s26)}</span><br><span class="${ds>0?'up':'dn'}" style="font-size:9px">${ds>0?'▲':'▼'}${M(Math.abs(ds))}</span></td></tr>`;
+  h+=`<tr class="spacer"><td colspan="14"></td></tr>`;
+});
+h+='</tbody>';
+document.getElementById('ctbl').innerHTML=h;
+
+/* 펌프장 차트 */
+const baseO={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+  scales:{x:{ticks:{color:tc,font:{size:10},autoSkip:false,maxRotation:0},grid:{color:gc},border:{display:false}},
+          y:{ticks:{color:tc,font:{size:10},callback:v=>M(v)+'M'},grid:{color:gc},border:{display:false}}}};
+function makeChart(id,k){
+  const act=D26act[k].concat(Array(9).fill(null));
+  const est=Array(3).fill(null).concat(D26est[k]);
+  new Chart(document.getElementById(id),{type:'bar',data:{labels:ML,datasets:[
+    {label:'2025',data:D25[k],backgroundColor:'rgba(160,160,160,0.4)',borderRadius:2},
+    {label:'2026 실집행',data:act,backgroundColor:'#185FA5',borderRadius:2},
+    {label:'2026 추정',data:est,backgroundColor:'#FAC775',borderRadius:2,borderWidth:1,borderColor:'#EF9F27'},
+  ]},options:baseO});
+}
+makeChart('cpump','송수');makeChart('cmid','중간');makeChart('cans','안산');
+
+/* 파이차트 */
+const pieCols=['#185FA5','#F4C0D1','#D3D1C7'],pieLbls=['공공요금','연간단가','일반지출'];
+function makePie(id,data){
+  new Chart(document.getElementById(id),{type:'doughnut',data:{labels:pieLbls,datasets:[{data,backgroundColor:pieCols,borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'bottom',
+      labels:{font:{size:11},color:tc,padding:10,generateLabels:(c)=>{
+        const ds=c.data.datasets[0],tot=ds.data.reduce((a,b)=>a+b,0);
+        return c.data.labels.map((l,i)=>({text:`${l} ${(ds.data[i]/tot*100).toFixed(1)}%`,fillStyle:ds.backgroundColor[i],strokeStyle:'transparent',index:i}));
+      }}}}}});
+}
+makePie('pie1',[32439620,43428000,1590000]);
+makePie('pie2',[211190750,69348000,53108350]);
+
+/* 누계 차트 */
+const cumO={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+  scales:{x:{ticks:{color:tc,font:{size:9},autoSkip:false,maxRotation:35},grid:{color:gc},border:{display:false}},
+          y:{ticks:{color:tc,font:{size:9},callback:v=>M(v)+'M'},grid:{color:gc},border:{display:false}}}};
+
+/* 수해예방 누계 — 축: 25년12월 ~ 4월 */
+const CL1=['25년12월','1월','2월','3월','4월'];
+const CM1=[2019920,9313640,8192500,4963830,7949730];
+let cum1=0; const CC1=CM1.map(v=>{cum1+=v;return cum1;});
+new Chart(document.getElementById('ccum1'),{type:'bar',data:{labels:CL1,datasets:[
+  {label:'월 집행',data:CM1,backgroundColor:'#185FA5',borderRadius:2,yAxisID:'y'},
+  {label:'누계',data:CC1,type:'line',borderColor:'#1D9E75',backgroundColor:'rgba(29,158,117,0.08)',borderWidth:2,pointRadius:3,tension:0.3,yAxisID:'y'},
+]},options:{...cumO,scales:{
+  x:{ticks:{color:tc,font:{size:10},autoSkip:false,maxRotation:0},grid:{color:gc},border:{display:false}},
+  y:{ticks:{color:tc,font:{size:9},callback:v=>M(v)+'M'},grid:{color:gc},border:{display:false}}
+}}});
+
+/* 지방하천 누계 */
+const CL2=['25년12월','1월','2월','3월','4월'];
+const CM2=[2387240,79297860,73174130,49488250,6843270];
+let cum2=0; const CC2=CM2.map(v=>{cum2+=v;return cum2;});
+new Chart(document.getElementById('ccum2'),{type:'bar',data:{labels:CL2,datasets:[
+  {label:'월 집행',data:CM2,backgroundColor:'#185FA5',borderRadius:2,yAxisID:'y'},
+  {label:'누계',data:CC2,type:'line',borderColor:'#1D9E75',backgroundColor:'rgba(29,158,117,0.08)',borderWidth:2,pointRadius:3,tension:0.3,yAxisID:'y'},
+]},options:{...cumO,scales:{
+  x:{ticks:{color:tc,font:{size:10},autoSkip:false,maxRotation:0},grid:{color:gc},border:{display:false}},
+  y:{ticks:{color:tc,font:{size:9},callback:v=>M(v)+'M'},grid:{color:gc},border:{display:false}}
+}}});
+
+/* 내역 테이블 */
+const bm={'요금-전기':'<span class="badge be">요금-전기</span>','요금-통신':'<span class="badge bc">요금-통신</span>','요금-수도':'<span class="badge bw">요금-수도</span>','연간단가':'<span class="badge ba">연간단가</span>','일반지출':'<span class="badge bo">일반지출</span>'};
+function bd(u,t){if(u&&u!=='nan')return bm['요금-'+u]||bm['일반지출'];if(t==='연간단가용역')return bm['연간단가'];return bm['일반지출'];}
+function ds(d){if(!d||d==='nan')return '-';return d.slice(0,4)+'-'+d.slice(4,6)+'-'+d.slice(6,8)}
+function fillT(id,rows){document.getElementById(id).innerHTML=rows.map(r=>`<tr><td style="white-space:nowrap">${ds(r.d)}</td><td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.desc}">${r.desc}</td><td>${bd(r.u,r.t)}</td><td style="text-align:right;font-variant-numeric:tabular-nums">${fmt(r.p)}</td><td style="text-align:right;font-variant-numeric:tabular-nums;color:${r.g===0?'var(--color-text-tertiary)':'var(--color-text-primary)'}">${r.g?fmt(r.g):'-'}</td></tr>`).join('');}
+const R1=[
+  {d:'20260414',desc:'수해예방 강화시설 전기요금 납부(4월분)',u:'전기',t:'공공요금',p:2955610,g:2955610},
+  {d:'20260414',desc:'하수관로 수위계 등 통신요금 납부(4월분)',u:'통신',t:'공공요금',p:4994120,g:4994120},
+  {d:'20260331',desc:'음악분수 안내판 제작 및 설치 비용 지급',u:'',t:'일반지출',p:1590000,g:1590000},
+  {d:'20260315',desc:'하수관로 수위계 등 통신요금 납부(3월분)',u:'통신',t:'공공요금',p:4963830,g:4963830},
+  {d:'20260315',desc:'수해예방 강화시설 전기요금 납부(2월분)',u:'전기',t:'공공요금',p:3185530,g:3185530},
+  {d:'20260219',desc:'수해예방 강화시설 전기요금 납부(1월분-수정)',u:'전기',t:'공공요금',p:3189540,g:3189540},
+  {d:'20260213',desc:'하수관로 수위계 등 통신요금 납부(2월분)',u:'통신',t:'공공요금',p:5006970,g:5006970},
+  {d:'20260119',desc:'수해예방 강화시설 전기요금 납부(12월-납기분)',u:'전기',t:'공공요금',p:2019920,g:2019920},
+  {d:'20260116',desc:'하수관로 수위계 등 통신요금 납부(1월분)',u:'통신',t:'공공요금',p:6124100,g:6124100},
+  {d:'20260102',desc:'하천 진출입 차단시설 유지관리 용역(연간단가)',u:'',t:'연간단가용역',p:22000000,g:0},
+  {d:'20260101',desc:'하수관로 수위계 유지관리 용역(연간단가)',u:'',t:'연간단가용역',p:21428000,g:0},
+];
+const R2=[
+  {d:'20260414',desc:'안산가압장 케이블방송 등 통신요금 납부(4월분)',u:'통신',t:'공공요금',p:988610,g:988610},
+  {d:'20260414',desc:'하천변 야외운동기구 수리비 지급',u:'',t:'일반지출',p:2511300,g:0},
+  {d:'20260414',desc:'홍제천 뮤직카페 상하수도 요금 납부(4월분)',u:'수도',t:'공공요금',p:1549800,g:1549800},
+  {d:'20260414',desc:'하천변 조명시설 전기요금 납부(4월)',u:'전기',t:'공공요금',p:4062860,g:4062860},
+  {d:'20260414',desc:'홍제천·불광천 부대시설 상하수도 요금(4월)',u:'수도',t:'공공요금',p:242000,g:242000},
+  {d:'20260401',desc:'조달물품(철봉) 구매[야외운동기구 교체]',u:'',t:'일반지출',p:4644940,g:0},
+  {d:'20260330',desc:'연가교 음악분수 전기요금 납부(3월분)',u:'전기',t:'공공요금',p:2191350,g:2191350},
+  {d:'20260330',desc:'홍제폭포 고가도로 하부조명 전기요금(3월)',u:'전기',t:'공공요금',p:3045280,g:3045280},
+  {d:'20260325',desc:'중간가압장 전기요금 납부(3월분)',u:'전기',t:'공공요금',p:10821080,g:10821080},
+  {d:'20260325',desc:'송수펌프장 전기요금 납부(3월분)',u:'전기',t:'공공요금',p:25709430,g:25709430},
+  {d:'20260324',desc:'홍제천 뮤직카페 전기요금 납부(3월분)',u:'전기',t:'공공요금',p:2467950,g:2467950},
+  {d:'20260320',desc:'홍제천 조명시설 정비대금 지급',u:'',t:'일반지출',p:2997000,g:2997000},
+  {d:'20260319',desc:'홍제천 안산가압장 전기요금 납부(3월분)',u:'전기',t:'공공요금',p:4264550,g:4264550},
+  {d:'20260318',desc:'하천 조명시설물 전기설비 안전진단용역',u:'',t:'일반지출',p:11152000,g:0},
+  {d:'20260316',desc:'안산가압장 케이블방송 통신요금 납부(3월분)',u:'통신',t:'공공요금',p:988610,g:988610},
+  {d:'20260315',desc:'하천변 조명시설 전기요금 납부(2월)',u:'전기',t:'공공요금',p:4786480,g:4786480},
+  {d:'20260303',desc:'관급자재 구매[홍연교 보행데크 조명시설 공사]',u:'',t:'일반지출',p:733940,g:733930},
+  {d:'20260227',desc:'연가교 음악분수 전기요금 납부(2월분)',u:'전기',t:'공공요금',p:3011120,g:3011120},
+  {d:'20260227',desc:'공사 시행[홍연교 보행데크 조명시설 설치공사]',u:'',t:'일반지출',p:9207000,g:0},
+  {d:'20260227',desc:'홍제폭포 고가도로 하부조명 전기요금(2월)',u:'전기',t:'공공요금',p:6021790,g:6021790},
+  {d:'20260227',desc:'전기설비 법정 정기검사 수수료[송수펌프장]',u:'',t:'일반지출',p:1308670,g:1308670},
+  {d:'20260225',desc:'송수펌프장 전기요금 납부(2월분)',u:'전기',t:'공공요금',p:31869210,g:31869210},
+  {d:'20260225',desc:'중간가압장 전기요금 납부(2월분)',u:'전기',t:'공공요금',p:12844300,g:12844300},
+  {d:'20260225',desc:'홍제천 뮤직카페 전기요금 납부(2월분)',u:'전기',t:'공공요금',p:3502130,g:3502130},
+  {d:'20260225',desc:'하천변 야외운동기구 수리비 지급',u:'',t:'일반지출',p:190300,g:190300},
+  {d:'20260223',desc:'홍제천 안산가압장 전기요금 납부(2월분)',u:'전기',t:'공공요금',p:4021270,g:4021270},
+  {d:'20260219',desc:'안산가압장 케이블방송 통신요금 납부(2월분)',u:'통신',t:'공공요금',p:969520,g:969520},
+  {d:'20260219',desc:'환경개선용수 요금 납부(홍제천)',u:'수도',t:'공공요금',p:4737400,g:4737400},
+  {d:'20260213',desc:'홍제천·불광천 상하수도 요금 납부(2월분)',u:'수도',t:'공공요금',p:206490,g:206490},
+  {d:'20260213',desc:'홍제천 뮤직카페 상하수도 요금 납부(2월분)',u:'수도',t:'공공요금',p:1166250,g:1166250},
+  {d:'20260213',desc:'하천변 조명시설 전기요금 납부(1월분)',u:'전기',t:'공공요금',p:6500640,g:6500640},
+  {d:'20260211',desc:'홍제천 관리사무소 정화조 청소비 지급',u:'수도',t:'공공요금',p:38170,g:38170},
+  {d:'20260210',desc:'유지용수 공급시설 자동제어 설비계통 정비용역',u:'',t:'일반지출',p:9474300,g:8710000},
+  {d:'20260130',desc:'하천변 야외운동기구 수리비 지급(줄당기기)',u:'',t:'일반지출',p:190300,g:190300},
+  {d:'20260127',desc:'공사 시행[홍제폭포 조명 이전 설치 공사]',u:'',t:'일반지출',p:7150000,g:6570000},
+  {d:'20260122',desc:'연가교 음악분수 전기요금 납부(1월분)',u:'전기',t:'공공요금',p:1133430,g:1133430},
+  {d:'20260121',desc:'홍제천 뮤직카페 전기요금 납부(1월분)',u:'전기',t:'공공요금',p:3073140,g:3073140},
+  {d:'20260121',desc:'중간가압장 전기요금 납부(1월분)',u:'전기',t:'공공요금',p:13645630,g:13645630},
+  {d:'20260121',desc:'송수펌프장 전기요금 납부(1월분)',u:'전기',t:'공공요금',p:45019690,g:45019690},
+  {d:'20260121',desc:'홍제천 안산가압장 전기요금 납부(1월분)',u:'전기',t:'공공요금',p:5843570,g:5843570},
+  {d:'20260116',desc:'안산가압장 케이블방송 통신요금 납부(1월분)',u:'통신',t:'공공요금',p:934490,g:934490},
+  {d:'20260116',desc:'하천변 조명시설 전기요금 납부(12월-납기)',u:'전기',t:'공공요금',p:2387240,g:2387240},
+  {d:'20260116',desc:'홍제천·불광천 부대시설 상하수도 요금(1월)',u:'수도',t:'공공요금',p:74130,g:74130},
+  {d:'20260106',desc:'하천변 야외운동기구 수리비 지급(서핑롤링 등)',u:'',t:'일반지출',p:825000,g:825000},
+  {d:'20260106',desc:'하천변 야외운동기구 수리비 지급(줄당기기)',u:'',t:'일반지출',p:259600,g:259600},
+  {d:'20260102',desc:'하천변 야외운동기구 수리비 지급',u:'',t:'일반지출',p:2464000,g:2464000},
+  {d:'20260102',desc:'하천 음악방송 시스템 유지관리 용역(연간단가)',u:'',t:'연간단가용역',p:17831000,g:0},
+  {d:'20260102',desc:'재난감시용 CCTV 유지관리 용역(연간단가)',u:'',t:'연간단가용역',p:21153000,g:5630000},
+  {d:'20260102',desc:'하천 위기상황관리시스템 유지관리 용역(연간단가)',u:'',t:'연간단가용역',p:16900000,g:0},
+  {d:'20260101',desc:'홍제천 중간가압장 전기안전관리대행 용역(연간단가)',u:'',t:'연간단가용역',p:13464000,g:3027500},
+];
+fillT('tb1',R1);fillT('tb2',R2);
+</script>
